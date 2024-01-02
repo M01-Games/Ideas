@@ -1,0 +1,29 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{C4B3E717-4629-8755-51D1-75ADB1E724CF}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "Ideas",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},
+		{
+			"Name": "SkeletalMeshModelingTools",
+			"Enabled": true
+		}
+	]
+}
