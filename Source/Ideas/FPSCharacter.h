@@ -49,6 +49,28 @@ public:
 	UFUNCTION()
 		void StopJump();
 
+	// Sets Sprint flag when key is pressed.
+	UFUNCTION()
+		void StartSprint();
+
+	// Clears Sprint flag when key is released.
+	UFUNCTION()
+		void StopSprint();
+
+	// Sprint flag set to false.
+	bool bPressedSprint = false;
+
+	// Sets Sprint flag when key is pressed.
+	UFUNCTION()
+	void StartCrouch();
+
+	// Clears Sprint flag when key is released.
+	UFUNCTION()
+	void StopCrouch();
+
+	// Sprint flag set to false.
+	bool bPressedCrouch = false;
+
 	// Function that handles firing projectiles.
 	UFUNCTION()
 		void Fire();
@@ -72,6 +94,10 @@ public:
 	// Gun muzzle offset from the camera location.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Health = 100.0f;
+
+	// Sprint multipler that will be added to the characters movement.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		float SprintSpeedMultiplier;
 
 	void DealDamage(float DamageAmount);
 };

@@ -71,6 +71,8 @@ void AFPSCharacter::BeginPlay()
 
 	GunMesh->SetRelativeLocation(FVector(3.985038f, 0.763133f, 5.375207f));
 	GunMesh->SetRelativeRotation(FRotator(71.406314f, 124.010001f, 33.820759f));
+
+	SprintSpeedMultiplier = 2.0f;
 }
 
 // Called every frame
@@ -97,6 +99,12 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AFPSCharacter::StartJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AFPSCharacter::StopJump);
 
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFPSCharacter::StartSprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFPSCharacter::StopSprint);
+
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AFPSCharacter::StartCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AFPSCharacter::StopCrouch);
+
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
 
 }
@@ -105,6 +113,8 @@ void AFPSCharacter::MoveForward(float Value)
 {
 	// Find out which way is "forward" and record that the player wants to move that way.
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
+	if (!bPressedSprint)
+		Value *= 0.3;
 	AddMovementInput(Direction, Value);
 }
 
@@ -112,6 +122,8 @@ void AFPSCharacter::MoveRight(float Value)
 {
 	// Find out which way is "right" and record that the player wants to move that way.
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
+	if (!bPressedSprint)
+		Value *= 0.3;
 	AddMovementInput(Direction, Value);
 }
 
@@ -123,6 +135,32 @@ void AFPSCharacter::StartJump()
 void AFPSCharacter::StopJump()
 {
 	bPressedJump = false;
+}
+
+void AFPSCharacter::StartSprint()
+{
+	bPressedSprint = true;
+}
+
+void AFPSCharacter::StopSprint()
+{
+	bPressedSprint = false;
+}
+
+void AFPSCharacter::StartCrouch()
+{
+	bPressedCrouch = true;
+	SetActorRelativeScale3D(FVector(1.0, 1.0, 0.75));
+	GunMesh->SetRelativeLocation(FVector(3.663145, 2.116888, 8.020947));
+	GunMesh->SetRelativeRotation(FRotator(74.528212, 131.925329, 41.418362));
+}
+
+void AFPSCharacter::StopCrouch()
+{
+	bPressedCrouch = false;
+	SetActorRelativeScale3D(FVector(1.0, 1.0, 1.0));
+	GunMesh->SetRelativeLocation(FVector(3.985038f, 0.763133f, 5.375207f));
+	GunMesh->SetRelativeRotation(FRotator(71.406314f, 124.010001f, 33.820759f));
 }
 
 void AFPSCharacter::Fire()
