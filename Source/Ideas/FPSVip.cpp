@@ -101,33 +101,21 @@ void AFPSVip::OnSensed(const TArray<AActor*>& UpdatedActors)
 	{
 		FActorPerceptionBlueprintInfo Info;
 		AIPerComp->GetActorsPerception(UpdatedActors[i], Info);
+		AFPSCharacter* Char = Cast<AFPSCharacter>(UpdatedActors[i]); //Sets a pointer to the players character
 
-		if (Info.LastSensedStimuli[0].WasSuccessfullySensed())
+		if (Info.LastSensedStimuli[0].WasSuccessfullySensed()) //Checls if the last dectetion of an actor was successful
 		{
-			FVector dir = UpdatedActors[i]->GetActorLocation() - GetActorLocation();
-			dir.Z = 0.0f;
-
-			CurrentVelocity = dir.GetSafeNormal() * MovementSpeed;
-
-			SetNewRotation(UpdatedActors[i]->GetActorLocation(), GetActorLocation());
-
-		}
-		else
-		{
-			FVector dir = BaseLocation - GetActorLocation();
-			dir.Z = 0.0f;
-
-			if (dir.SizeSquared2D() > 1.0f)
+			if (UpdatedActors[i] == Char) //Checks if the player was the last detected actor
 			{
-				CurrentVelocity = dir.GetSafeNormal() * MovementSpeed;
-				BackToBaseLocation = true;
+				FVector dir = UpdatedActors[i]->GetActorLocation() - GetActorLocation();
+				dir.Z = 0.0f;
 
-				SetNewRotation(BaseLocation, GetActorLocation());
+				CurrentVelocity = dir.GetSafeNormal() * MovementSpeed;
+
+				SetNewRotation(UpdatedActors[i]->GetActorLocation(), GetActorLocation());
 			}
 		}
 	}
-
-
 }
 
 void AFPSVip::SetNewRotation(FVector TargetPosition, FVector CurrentPosition)

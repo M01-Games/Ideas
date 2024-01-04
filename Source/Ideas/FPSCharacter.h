@@ -114,7 +114,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector MuzzleOffset;
 
-	// Gun muzzle offset from the camera location.
+	// The players full health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Health = 100.0f;
 
@@ -123,4 +123,6 @@ public:
 		float SprintSpeedMultiplier;
 
 	void DealDamage(float DamageAmount);
+
+	void HealPlayer(float HealAmount);
 };

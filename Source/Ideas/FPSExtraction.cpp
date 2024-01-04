@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "FPSVip.h"
+#include "FPSCharacter.h"
 #include "IdeasGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -16,7 +17,7 @@ AFPSExtraction::AFPSExtraction()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Creates the staticmesh
-	ExtractionMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door Mesh"));
+	ExtractionMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Extraction Mesh"));
 	RootComponent = ExtractionMesh;
 
 	//Creates the Collision box
@@ -42,6 +43,18 @@ void AFPSExtraction::Tick(float DeltaTime)
 void AFPSExtraction::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
 {
 	AFPSVip* vip = Cast<AFPSVip>(OtherActor);
+
+	AFPSCharacter* Char = Cast<AFPSCharacter>(OtherActor);
+	if (Char)
+	{
+		//Restart game
+		AIdeasGameModeBase* MyGameMode = Cast<AIdeasGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+
+		if (MyGameMode)
+		{
+			MyGameMode->RestartGamePlay(false);
+		}
+	}
 
 	if (vip)
 	{

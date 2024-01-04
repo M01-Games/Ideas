@@ -265,3 +265,8 @@ void AFPSCharacter::DealDamage(float DamageAmount)
 
 	}
 }
+
+void AFPSCharacter::HealPlayer(float HealAmount)
+{
+	Health += HealAmount;
+}
