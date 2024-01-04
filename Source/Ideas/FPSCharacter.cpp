@@ -52,6 +52,13 @@ AFPSCharacter::AFPSCharacter()
 
 	// The owning player doesn't see the regular (third-person) body mesh.
 	GetMesh()->SetOwnerNoSee(true);
+
+	//Setting Gun Values
+	maxTotalAmmo = 120;
+	maxClipAmmo = 30;
+	totalAmmo = 120;
+	clipAmmo = 30;
+	reloadTime = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -106,6 +113,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AFPSCharacter::StopCrouch);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AFPSCharacter::ReloadWeapon);
 
 }
 
@@ -163,42 +171,79 @@ void AFPSCharacter::StopCrouch()
 	GunMesh->SetRelativeRotation(FRotator(71.406314f, 124.010001f, 33.820759f));
 }
 
+void AFPSCharacter::ReloadWeapon()
+{
+	if (clipAmmo != maxClipAmmo)
+	{
+		if (totalAmmo - (maxClipAmmo - clipAmmo) >= 0)
+		{
+			totalAmmo -= (maxClipAmmo - clipAmmo);
+			clipAmmo = maxClipAmmo;
+		}
+		else
+		{
+			clipAmmo += totalAmmo;
+			totalAmmo = 0;
+		}
+	}
+}
+
 void AFPSCharacter::Fire()
 {
-	// Attempt to fire a projectile.
-	if (ProjectileClass)
+	if (clipAmmo > 0)
 	{
-		// Get the camera transform.
-		FVector CameraLocation;
-		FRotator CameraRotation;
-		GetActorEyesViewPoint(CameraLocation, CameraRotation);
-
-		// Set MuzzleOffset to spawn projectiles slightly in front of the camera.
-		MuzzleOffset.Set(100.0f, 0.0f, -30.0f);
-
-		// Transform MuzzleOffset from camera space to world space.
-		FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
-
-		// Skew the aim to be slightly upwards.
-		FRotator MuzzleRotation = CameraRotation;
-		MuzzleRotation.Pitch += 5.0f;
-
-		UWorld* World = GetWorld();
-		if (World)
+		clipAmmo -= 1;
+		// Attempt to fire a projectile.
+		if (ProjectileClass)
 		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = this;
-			SpawnParams.Instigator = GetInstigator();
+			// Get the camera transform.
+			FVector CameraLocation;
+			FRotator CameraRotation;
+			GetActorEyesViewPoint(CameraLocation, CameraRotation);
 
-			// Spawn the projectile at the muzzle.
-			AFPSProjectile* Projectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-			if (Projectile)
+			// Set MuzzleOffset to spawn projectiles slightly in front of the camera.
+			MuzzleOffset.Set(100.0f, 0.0f, -30.0f);
+
+			// Transform MuzzleOffset from camera space to world space.
+			FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
+
+			// Skew the aim to be slightly upwards.
+			FRotator MuzzleRotation = CameraRotation;
+			MuzzleRotation.Pitch += 5.0f;
+
+			UWorld* World = GetWorld();
+			if (World)
 			{
-				// Set the projectile's initial trajectory.
-				FVector LaunchDirection = MuzzleRotation.Vector();
-				Projectile->FireInDirection(LaunchDirection);
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				SpawnParams.Instigator = GetInstigator();
+
+				// Spawn the projectile at the muzzle.
+				AFPSProjectile* Projectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+				if (Projectile)
+				{
+					// Set the projectile's initial trajectory.
+					FVector LaunchDirection = MuzzleRotation.Vector();
+					Projectile->FireInDirection(LaunchDirection);
+				}
 			}
 		}
+	}
+	else if (totalAmmo > 0) 
+	{
+		ReloadWeapon();
+	}
+	else 
+	{
+		//Restart game
+		AIdeasGameModeBase* MyGameMode = Cast<AIdeasGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+
+		if (MyGameMode)
+		{
+			MyGameMode->RestartGamePlay(false);
+		}
+
+		Destroy();
 	}
 }
 

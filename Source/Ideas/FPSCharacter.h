@@ -71,9 +71,32 @@ public:
 	// Sprint flag set to false.
 	bool bPressedCrouch = false;
 
+	//Reloads the weapon
+	void ReloadWeapon();
+
 	// Function that handles firing projectiles.
 	UFUNCTION()
 		void Fire();
+
+	//The total amount of ammo that can be carried for the weapon. 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		int maxTotalAmmo;
+
+	//The total amount of ammo that can be in the weapon.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon) 
+		int maxClipAmmo;
+
+	//The total amount of ammo being carried for the weapon. 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		int totalAmmo;
+
+	//The amount of ammo in the weapon.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		int clipAmmo;
+
+	//The time it takes to reload the weapon.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		float reloadTime;
 
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
