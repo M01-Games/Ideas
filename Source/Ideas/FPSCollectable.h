@@ -10,8 +10,8 @@ UCLASS()
 class IDEAS_API AFPSCollectable : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AFPSCollectable();
 
@@ -19,7 +19,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -30,23 +30,23 @@ public:
 		class UBoxComponent* CollisionComponent;
 
 	//Is the collectable a medkit 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collectable)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool medKit = false;
 
 	//Is the collectable an ammobox 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collectable)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool ammoBox = false;
 
-	//Is the collectable a document 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collectable)
+	//Is the collectable a document
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool docs = false;
 
 	//Is the Health increase
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collectable)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float HealIncrease = 25.0f;
-
+	
 	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
+		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 		bool bFromSweep, const FHitResult& Hit);
 };

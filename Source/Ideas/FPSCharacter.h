@@ -98,6 +98,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 		float reloadTime;
 
+	//Is the amount of Docs the palyer has collected
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int docsCollected = 0;
+
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
 		UCameraComponent* FPSCameraComponent;
@@ -117,10 +121,6 @@ public:
 	// The players full health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Health = 100.0f;
-
-	// Sprint multipler that will be added to the characters movement.
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float SprintSpeedMultiplier;
 
 	void DealDamage(float DamageAmount);
 

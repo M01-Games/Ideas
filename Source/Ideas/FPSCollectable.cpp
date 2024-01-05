@@ -20,6 +20,7 @@ AFPSCollectable::AFPSCollectable()
 	//Creates the Collision box
 	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Component"));
 	CollisionComponent->SetupAttachment(CollectableMesh);
+
 }
 
 // Called when the game starts or when spawned
@@ -27,7 +28,7 @@ void AFPSCollectable::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AFPSCollectable::OnHit);
+	//CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AFPSCollectable::OnHit);
 }
 
 // Called every frame
@@ -41,19 +42,27 @@ void AFPSCollectable::Tick(float DeltaTime)
 void AFPSCollectable::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
 {
 	AFPSCharacter* Char = Cast<AFPSCharacter>(OtherActor);
-	if (medKit = true)
+	if (medKit == true)
 	{
 		if (Char->Health != 100)
 		{
 			Char->HealPlayer(HealIncrease);
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("HEALTH"));
+			if (Char->Health > 100)
+			{
+				Char->Health = 100;
+			}
 		}
 	}
-	else if (ammoBox = true)
+	else if (ammoBox == true)
 	{
-
+		Char->totalAmmo += Char->maxClipAmmo;
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("AMMO"));
 	}
-	else if (docs = true)
+	else if (docs == true)
 	{
-
+		Char->docsCollected++;
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("DOCS"));
 	}
+	
 }

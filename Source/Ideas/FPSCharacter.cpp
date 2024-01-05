@@ -78,8 +78,6 @@ void AFPSCharacter::BeginPlay()
 
 	GunMesh->SetRelativeLocation(FVector(3.985038f, 0.763133f, 5.375207f));
 	GunMesh->SetRelativeRotation(FRotator(71.406314f, 124.010001f, 33.820759f));
-
-	SprintSpeedMultiplier = 2.0f;
 }
 
 // Called every frame
